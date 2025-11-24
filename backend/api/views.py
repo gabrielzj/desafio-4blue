@@ -34,7 +34,10 @@ def register_list_message(request):
             serializer = MessageSerializer(data=request.data)
             if serializer.is_valid():
                 msg = serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                user = get_object_or_404(User, pk=msg.user_id)
+                user_type = user.user_type
+                user_response_msg = f"Obrigado por seu contato, usuário {user.name} do tipo {user_type}. Em breve responderemos."
+                return Response({'message': user_response_msg}, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
