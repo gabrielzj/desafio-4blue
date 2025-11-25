@@ -17,3 +17,4 @@ class User(models.Model):
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message', verbose_name='Mensagem do Usuário')
     description = models.CharField(max_length=250)
+    system_response = models.CharField(max_length=250, blank=True, null=True, verbose_name='Resposta do Sistema')
