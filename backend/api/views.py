@@ -17,16 +17,10 @@ def register_list_user(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    if request.method =='GET':
-        try:
-            user = User.objects.filter(user_type=request.user_type)
-            if not user:
-                raise ValidationError("Não existe usuário para listagem.")
-            serializer = UserSerializer(user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
+    if request.method == 'GET':
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 @api_view(['POST', 'GET'])
 def register_list_message(request):
     if request.method == 'POST':
@@ -34,18 +28,26 @@ def register_list_message(request):
             serializer = MessageSerializer(data=request.data)
             if serializer.is_valid():
                 msg = serializer.save()
-                user = get_object_or_404(User, pk=msg.user_id)
+                user = msg.user
                 user_type = user.user_type
-                user_response_msg = f"Obrigado por seu contato, usuário {user.name} do tipo {user_type}. Em breve responderemos."
+                user_response_msg = f"Obrigado por seu contato, {user.name} {user_type}. Em breve responderemos."
+                
+                msg.system_response = user_response_msg
+                msg.save()
                 return Response({'message': user_response_msg}, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     if request.method == 'GET':
-        try:
-            msg = get_object_or_404(Message, pk=User.user_type)
-            if not msg:
-                raise ValidationError("Não existe usuário para listagem.")
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        user_id = request.query_params.get('user_id')
+        user_type = request.query_params.get('user_type')
+        if user_id:
+            messages = Message.objects.filter(user__id=user_id)
+        elif user_type:
+            if user_type not in ('A', 'B'):
+                return Response({'error': 'user_type inválido. Use A ou B.'}, status=status.HTTP_400_BAD_REQUEST)
+            messages = Message.objects.filter(user__user_type=user_type)
+        else:
+            messages = Message.objects.all()
+        serializer = MessageSerializer(messages, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
