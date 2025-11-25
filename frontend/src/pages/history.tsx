@@ -1,7 +1,7 @@
 import { Box, Button, Table } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { getMessages } from "@/services/apiClient";
 
 interface MessageItem {
   id: number;
@@ -23,11 +23,9 @@ function History() {
     navigate("/chat", { replace: true });
   };
 
-  const getMessage = async () => {
+  const fetchMessages = async () => {
     try {
-      const response = await axios.get<MessageItem[]>(
-        `http://localhost:8000/api/messages/?user_type=${userType}&user_id=${userId}`
-      );
+      const response = await getMessages(userType, userId);
       setMessages(response.data);
     } catch (error) {
       console.error("Erro ao buscar mensagens:", error);
@@ -35,7 +33,7 @@ function History() {
   };
 
   useEffect(() => {
-    getMessage();
+    fetchMessages();
   }, []);
 
   return (

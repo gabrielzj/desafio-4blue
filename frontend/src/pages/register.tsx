@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Box, Button, Input, VStack, chakra } from "@chakra-ui/react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { registerUser as registerUserService } from "@/services/apiClient";
 
 type RegisterType = "A" | "B";
 
@@ -17,12 +17,9 @@ function Register() {
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
-  const registerUser = async (data: RegisterData) => {
+  const handleRegisterUser = async (data: RegisterData) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/users/",
-        data
-      );
+      const response = await registerUserService(data);
       sessionStorage.setItem("user_id", response.data.id.toString());
       sessionStorage.setItem("user_type", response.data.user_type);
       sessionStorage.setItem("user_name", response.data.name);
@@ -48,7 +45,7 @@ function Register() {
     }
 
     setError("");
-    registerUser({ name, user_type: userType });
+    handleRegisterUser({ name, user_type: userType });
     console.log("Registrando:", { name, user_type: userType });
   }
 

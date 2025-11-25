@@ -1,7 +1,7 @@
 import { Box, Input, Button } from "@chakra-ui/react";
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { sendMessage } from "@/services/apiClient";
 
 type RegisterType = "A" | "B";
 
@@ -34,10 +34,7 @@ function Chat() {
     userMessages(data.description);
     setMessage("");
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/messages/",
-        data
-      );
+      const response = await sendMessage(data);
       setResponse(response.data);
       setIsResponseReceived(true);
       setTimeout(() => setIsResponseReceived(false), 3000);

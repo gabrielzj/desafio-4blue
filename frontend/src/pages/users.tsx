@@ -1,7 +1,7 @@
 import { Box, Button, Card, Heading, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { getUsers } from "@/services/apiClient";
 
 interface User {
   id: number;
@@ -14,11 +14,9 @@ function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const getUsers = async () => {
+  const fetchUsers = async () => {
     try {
-      const response = await axios.get<User[]>(
-        "http://localhost:8000/api/users/"
-      );
+      const response = await getUsers();
       setUsers(response.data);
     } catch (error) {
       console.error("Erro ao buscar usuários:", error);
@@ -39,7 +37,7 @@ function Users() {
   };
 
   useEffect(() => {
-    getUsers();
+    fetchUsers();
   }, []);
 
   return (
