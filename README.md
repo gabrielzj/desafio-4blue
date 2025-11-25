@@ -68,6 +68,7 @@ desafio-4blue/
     ├── src/
     │   ├── components/ui/  # Componentes reutilizáveis (Chakra UI snippets)
     │   ├── pages/          # Páginas (Chat, History, Register, Users)
+    │   ├── services/       # Serviços de API (Axios clients)
     │   ├── App.tsx         # Componente Raiz
     │   └── main.tsx        # Configuração de Rotas e Providers
     └── package.json
@@ -85,6 +86,15 @@ A comunicação acontece através da URL base: `http://localhost:8000/api/`
 | `GET`  | [`/users/`](/users/) | Lista todos os usuários cadastrados.                                   |
 | `POST` | `/messages/`         | Envia uma mensagem. O backend processa e gera uma resposta automática. |
 | `GET`  | `/messages/`         | Busca o histórico. Aceita filtros: `?user_type=A&user_id=1`.           |
+
+---
+
+## Modelos de Dados
+
+Os principais modelos de dados utilizados no backend são:
+
+- **User:** Representa um usuário do sistema com atributos como `id`, `name` (nome do usuário) e `user_type` (A ou B).
+- **Message:** Representa uma mensagem enviada ou recebida, contendo `id`, `user_id` (referência ao usuário), `description` (conteúdo da mensagem) e `system_response` (resposta gerada pelo sistema).
 
 ---
 
