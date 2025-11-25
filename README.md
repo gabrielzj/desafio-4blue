@@ -95,6 +95,8 @@ Os principais modelos de dados utilizados no backend são:
 
 - **User:** Representa um usuário do sistema com atributos como `id`, `name` (nome do usuário) e `user_type` (A ou B).
 - **Message:** Representa uma mensagem enviada ou recebida, contendo `id`, `user_id` (referência ao usuário), `description` (conteúdo da mensagem) e `system_response` (resposta gerada pelo sistema).
+  
+<img width="361" height="166" alt="bd-desafio" src="https://github.com/user-attachments/assets/0da57f41-d47e-4139-b56f-8e6fe80d40dd" />
 
 ---
 
