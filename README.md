@@ -149,6 +149,31 @@ _O frontend estará rodando em: `http://localhost:5173`_
 
 ---
 
+## 🎯 Decisões de Arquitetura
+
+### Backend (Django)
+
+Optou-se pela utilização do **Django REST Framework** devido ao seu suporte robusto e completo para construção de APIs RESTful, facilitando a serialização de dados e validação automática.
+
+- **Models:** A estrutura de dados foi simplificada em duas tabelas principais:
+
+  - **User:** Armazena as informações essenciais do usuário (`nome` e `tipo A/B`) necessárias para a lógica de negócio do chat.
+  - **Message:** Centraliza o armazenamento de todas as mensagens, incluindo tanto as enviadas pelo usuário quanto as respostas automáticas do sistema.
+
+- **Views:** Por se tratar de um projeto de escopo reduzido, foi adotado o padrão **FBV (Function-Based Views)**, que oferece maior simplicidade e clareza no código, facilitando a manutenção e compreensão da lógica implementada.
+
+### Frontend (React)
+
+A escolha do **Chakra UI** como biblioteca de componentes foi estratégica, proporcionando um sistema de design consistente, componentes acessíveis e um desenvolvimento ágil com foco na experiência do usuário.
+
+- **Gerenciamento de Estado:** Utilizou-se o `sessionStorage` para persistir as informações do usuário ativo (ID, nome e tipo) durante a sessão de navegação, eliminando a necessidade de implementar um sistema de autenticação complexo nesta fase do projeto.
+
+- **Organização de Código:** A lógica de consumo da API foi centralizada no arquivo `apiClient.ts`, promovendo reusabilidade e facilitando futuras manutenções ou alterações nos endpoints.
+
+- **Filtragem de Histórico:** A funcionalidade de histórico implementa um sistema de filtragem flexível através de **query parameters** no endpoint `GET /api/messages/`. A página `History.tsx` recupera automaticamente o `user_type` e `user_id` do `sessionStorage` e os envia como parâmetros na requisição, garantindo que cada usuário visualize apenas seu próprio histórico de conversas.
+
+---
+
 ## 🧪 Funcionalidades
 
 1.  **Cadastro de Usuário:** Escolha entre Tipo "A" ou "B".
